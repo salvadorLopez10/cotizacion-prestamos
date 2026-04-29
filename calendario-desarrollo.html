@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendario de Desarrollo — App de Préstamos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f7f5f0;
+    --white: #ffffff;
+    --ink: #18181b;
+    --ink2: #3f3f46;
+    --muted: #71717a;
+    --border: #e4e4e7;
+    --border2: #d4d4d8;
+
+    --blue: #2563eb;
+    --blue-bg: #eff6ff;
+    --blue-border: #bfdbfe;
+
+    --purple: #7c3aed;
+    --purple-bg: #f5f3ff;
+    --purple-border: #ddd6fe;
+
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --green-border: #bbf7d0;
+
+    --amber: #d97706;
+    --amber-bg: #fffbeb;
+    --amber-border: #fde68a;
+
+    --coral: #dc2626;
+    --coral-bg: #fef2f2;
+    --coral-border: #fecaca;
+
+    --pink: #db2777;
+    --pink-bg: #fdf2f8;
+    --pink-border: #fbcfe8;
+
+    --teal: #0d9488;
+    --teal-bg: #f0fdfa;
+    --teal-border: #99f6e4;
+
+    --gray: #52525b;
+    --gray-bg: #f4f4f5;
+    --gray-border: #d4d4d8;
+
+    --sans: 'Syne', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* HEADER */
+  .doc-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 24px;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .doc-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .doc-title {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .doc-title span {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 0.65em;
+    letter-spacing: 0;
+    margin-top: 6px;
+  }
+  .doc-meta {
+    text-align: right;
+  }
+  .doc-meta .folio {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .doc-meta .total-badge {
+    background: var(--ink);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* SUMMARY STRIP */
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+  .strip-item {
+    background: var(--white);
+    padding: 16px 18px;
+  }
+  .strip-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .strip-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .strip-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--ink2);
+    padding: 4px 10px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* MONTH */
+  .month-block {
+    margin-bottom: 48px;
+  }
+  .month-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .month-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border2);
+    padding-bottom: 10px;
+    flex: 1;
+  }
+  .month-name {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .month-phase {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* WEEK ROW */
+  .week-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 0;
+    position: relative;
+  }
+  .week-row + .week-row .week-left,
+  .week-row + .week-row .week-right {
+    border-top: 1px solid var(--border);
+  }
+
+  .week-left {
+    padding: 16px 16px 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .week-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .week-dates {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .week-right {
+    padding: 14px 0 14px 20px;
+    border-left: 3px solid transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .week-right.m1 { border-left-color: var(--blue); }
+  .week-right.m2 { border-left-color: var(--green); }
+  .week-right.m3 { border-left-color: var(--amber); }
+
+  /* TASK PILL */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px 4px 8px;
+    border-radius: 6px;
+    width: fit-content;
+    border: 1px solid transparent;
+  }
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .pill.infra { background: var(--blue-bg); color: #1d4ed8; border-color: var(--blue-border); }
+  .pill.infra .pill-dot { background: var(--blue); }
+  .pill.auth { background: var(--purple-bg); color: #5b21b6; border-color: var(--purple-border); }
+  .pill.auth .pill-dot { background: var(--purple); }
+  .pill.clients { background: var(--green-bg); color: #15803d; border-color: var(--green-border); }
+  .pill.clients .pill-dot { background: var(--green); }
+  .pill.loans { background: var(--amber-bg); color: #b45309; border-color: var(--amber-border); }
+  .pill.loans .pill-dot { background: var(--amber); }
+  .pill.notif { background: var(--coral-bg); color: #b91c1c; border-color: var(--coral-border); }
+  .pill.notif .pill-dot { background: var(--coral); }
+  .pill.app { background: var(--pink-bg); color: #9d174d; border-color: var(--pink-border); }
+  .pill.app .pill-dot { background: var(--pink); }
+  .pill.deploy { background: var(--teal-bg); color: #0f766e; border-color: var(--teal-border); }
+  .pill.deploy .pill-dot { background: var(--teal); }
+  .pill.admin { background: var(--gray-bg); color: var(--gray); border-color: var(--gray-border); }
+  .pill.admin .pill-dot { background: var(--gray); }
+
+  /* PAYMENT BANNER */
+  .payment-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-top: 4px;
+    border: 1.5px solid;
+  }
+  .payment-banner.pay1 { background: #eff6ff; border-color: #93c5fd; }
+  .payment-banner.pay2 { background: #f0fdf4; border-color: #86efac; }
+  .payment-banner.pay3 { background: #fffbeb; border-color: #fcd34d; }
+  .payment-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+  .payment-banner.pay1 .payment-num { background: #2563eb; color: #fff; }
+  .payment-banner.pay2 .payment-num { background: #16a34a; color: #fff; }
+  .payment-banner.pay3 .payment-num { background: #d97706; color: #fff; }
+  .payment-info { flex: 1; }
+  .payment-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .payment-detail { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .payment-amount {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .payment-banner.pay1 .payment-amount { color: #1d4ed8; }
+  .payment-banner.pay2 .payment-amount { color: #15803d; }
+  .payment-banner.pay3 .payment-amount { color: #b45309; }
+
+  /* TOTAL FOOTER */
+  .total-footer {
+    background: var(--ink);
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 1fr repeat(3, auto);
+    gap: 32px;
+    align-items: center;
+    margin-top: 48px;
+  }
+  .tf-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .tf-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .tf-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.12);
+  }
+  .tf-total .tf-label { color: rgba(255,255,255,0.4); }
+  .tf-total .tf-value { font-size: 28px; color: #4ade80; font-family: var(--mono); }
+
+  /* FOOTER DOC */
+  .doc-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 32px 16px 60px; }
+    .doc-header { grid-template-columns: 1fr; }
+    .doc-meta { text-align: left; }
+    .summary-strip { grid-template-columns: 1fr 1fr; }
+    .week-row { grid-template-columns: 80px 1fr; }
+    .total-footer { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .tf-divider { display: none; }
+    .doc-footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div>
+      <div class="doc-tag">Plan de desarrollo · DOC-2026-001 + DOC-2026-002</div>
+      <div class="doc-title">
+        Calendario de Entrega
+        <span>App Móvil de Gestión de Préstamos</span>
+      </div>
+    </div>
+    <div class="doc-meta">
+      <div class="folio">Ref: DOC-2026-CAL</div>
+      <div class="total-badge">$46,800 MXN · 3 pagos</div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-strip">
+    <div class="strip-item">
+      <div class="strip-label">Inicio</div>
+      <div class="strip-value">5 Mayo</div>
+      <div class="strip-sub">2026</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Entrega estimada</div>
+      <div class="strip-value">25 Julio</div>
+      <div class="strip-sub">2026</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Duración</div>
+      <div class="strip-value">12 semanas</div>
+      <div class="strip-sub">~3 meses</div>
+    </div>
+    <div class="strip-item">
+      <div class="strip-label">Horas semanales</div>
+      <div class="strip-value">~15 hrs</div>
+      <div class="strip-sub">3 hrs / día hábil</div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>Infraestructura</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Autenticación</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div>Clientes y documentos</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Préstamos y pagos</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Notificaciones</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#db2777"></div>App móvil</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#52525b"></div>Panel admin web</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0d9488"></div>Deploy y APK</div>
+  </div>
+
+  <!-- ─── MES 1 ─── -->
+  <div class="month-block">
+    <div class="month-header">
+      <div>
+        <div class="month-name">Mes 1 <span class="month-phase">— Cimientos y backend</span></div>
+      </div>
+      <div class="month-label"></div>
+    </div>
+
+    <!-- Sem 1 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 1</span>
+        <span class="week-dates">5 – 9<br>Mayo</span>
+      </div>
+      <div class="week-right m1">
+        <div class="pill infra"><div class="pill-dot"></div>Setup GCP: Cloud Run, Cloud SQL, Cloud Storage</div>
+        <div class="pill infra"><div class="pill-dot"></div>Configuración Firebase + FCM</div>
+        <div class="pill infra"><div class="pill-dot"></div>Repositorio GitHub + pipeline CI/CD base</div>
+        <div class="payment-banner pay1">
+          <div class="payment-num">1</div>
+          <div class="payment-info">
+            <div class="payment-title">Pago 1 — Al firmar ambos documentos</div>
+            <div class="payment-detail">DOC-2026-001 + DOC-2026-002 · Inicio formal del proyecto</div>
+          </div>
+          <div class="payment-amount">$15,600</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sem 2 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 2</span>
+        <span class="week-dates">12 – 16<br>Mayo</span>
+      </div>
+      <div class="week-right m1">
+        <div class="pill infra"><div class="pill-dot"></div>Prisma schema + migración inicial de base de datos</div>
+        <div class="pill auth"><div class="pill-dot"></div>Endpoints de auth: login / logout / refresh JWT</div>
+        <div class="pill auth"><div class="pill-dot"></div>Middleware RBAC (SUPER_ADMIN / ADMIN / AGENT)</div>
+      </div>
+    </div>
+
+    <!-- Sem 3 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 3</span>
+        <span class="week-dates">19 – 23<br>Mayo</span>
+      </div>
+      <div class="week-right m1">
+        <div class="pill admin"><div class="pill-dot"></div>Panel web admin: login + CRUD de usuarios</div>
+        <div class="pill admin"><div class="pill-dot"></div>Alta / baja / cambio de contraseña de agentes</div>
+        <div class="pill auth"><div class="pill-dot"></div>Invalidación de sesión al desactivar usuario</div>
+      </div>
+    </div>
+
+    <!-- Sem 4 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 4</span>
+        <span class="week-dates">26 – 30<br>Mayo</span>
+      </div>
+      <div class="week-right m1">
+        <div class="pill clients"><div class="pill-dot"></div>Alta de clientes en panel web admin</div>
+        <div class="pill clients"><div class="pill-dot"></div>Subida de documentos a GCS (INE, fotos, fachada)</div>
+        <div class="pill clients"><div class="pill-dot"></div>URLs firmadas para consulta segura de imágenes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MES 2 ─── -->
+  <div class="month-block">
+    <div class="month-header">
+      <div>
+        <div class="month-name">Mes 2 <span class="month-phase">— Lógica de negocio y app móvil</span></div>
+      </div>
+      <div class="month-label"></div>
+    </div>
+
+    <!-- Sem 5 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 5</span>
+        <span class="week-dates">2 – 6<br>Junio</span>
+      </div>
+      <div class="week-right m2">
+        <div class="pill loans"><div class="pill-dot"></div>Endpoints de préstamos: crear, consultar, renovar</div>
+        <div class="pill loans"><div class="pill-dot"></div>Lógica de pago total / solo interés / parcial</div>
+        <div class="pill loans"><div class="pill-dot"></div>Recálculo automático de fecha de vencimiento</div>
+      </div>
+    </div>
+
+    <!-- Sem 6 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 6</span>
+        <span class="week-dates">9 – 13<br>Junio</span>
+      </div>
+      <div class="week-right m2">
+        <div class="pill loans"><div class="pill-dot"></div>Query del dashboard diario (quién paga hoy)</div>
+        <div class="pill loans"><div class="pill-dot"></div>Reportes: resumen del día por equipo</div>
+        <div class="pill loans"><div class="pill-dot"></div>Endpoints de jornada: abrir y cerrar</div>
+      </div>
+    </div>
+
+    <!-- Sem 7 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 7</span>
+        <span class="week-dates">16 – 20<br>Junio</span>
+      </div>
+      <div class="week-right m2">
+        <div class="pill app"><div class="pill-dot"></div>App móvil: setup Expo + React Navigation</div>
+        <div class="pill app"><div class="pill-dot"></div>Redux store + RTK Query configuración base</div>
+        <div class="pill app"><div class="pill-dot"></div>LoginScreen + navegación condicional por rol</div>
+      </div>
+    </div>
+
+    <!-- Sem 8 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 8</span>
+        <span class="week-dates">23 – 27<br>Junio</span>
+      </div>
+      <div class="week-right m2">
+        <div class="pill app"><div class="pill-dot"></div>DashboardScreen: lista del día con link a Maps</div>
+        <div class="pill app"><div class="pill-dot"></div>ClientDetailScreen: datos, documentos, historial</div>
+        <div class="pill app"><div class="pill-dot"></div>PaymentScreen: 3 tipos de pago con cálculo en vivo</div>
+        <div class="payment-banner pay2">
+          <div class="payment-num">2</div>
+          <div class="payment-info">
+            <div class="payment-title">Pago 2 — Al entregar backend + pantallas principales</div>
+            <div class="payment-detail">App funcional con flujo de cobros operando en teléfono</div>
+          </div>
+          <div class="payment-amount">$15,600</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MES 3 ─── -->
+  <div class="month-block">
+    <div class="month-header">
+      <div>
+        <div class="month-name">Mes 3 <span class="month-phase">— Admin, notificaciones y entrega final</span></div>
+      </div>
+      <div class="month-label"></div>
+    </div>
+
+    <!-- Sem 9 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 9</span>
+        <span class="week-dates">30 Jun – 4<br>Julio</span>
+      </div>
+      <div class="week-right m3">
+        <div class="pill app"><div class="pill-dot"></div>AdminDashboardScreen: totales por equipo</div>
+        <div class="pill app"><div class="pill-dot"></div>LoanListScreen y ClientListScreen para el patrón</div>
+        <div class="pill app"><div class="pill-dot"></div>JornadaScreen: abrir y cerrar jornada del día</div>
+      </div>
+    </div>
+
+    <!-- Sem 10 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 10</span>
+        <span class="week-dates">7 – 11<br>Julio</span>
+      </div>
+      <div class="week-right m3">
+        <div class="pill notif"><div class="pill-dot"></div>Integración FCM: disparadores de los 4 eventos</div>
+        <div class="pill notif"><div class="pill-dot"></div>Notificación automática lista del día (cron 6am)</div>
+        <div class="pill notif"><div class="pill-dot"></div>Expo Notifications: recepción en primer y segundo plano</div>
+      </div>
+    </div>
+
+    <!-- Sem 11 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 11</span>
+        <span class="week-dates">14 – 18<br>Julio</span>
+      </div>
+      <div class="week-right m3">
+        <div class="pill deploy"><div class="pill-dot"></div>Deploy backend a Cloud Run + dominio y SSL</div>
+        <div class="pill deploy"><div class="pill-dot"></div>EAS Build: generación del APK Android instalable</div>
+        <div class="pill deploy"><div class="pill-dot"></div>Firebase App Distribution: distribución al equipo</div>
+      </div>
+    </div>
+
+    <!-- Sem 12 -->
+    <div class="week-row">
+      <div class="week-left">
+        <span class="week-num">Sem 12</span>
+        <span class="week-dates">21 – 25<br>Julio</span>
+      </div>
+      <div class="week-right m3">
+        <div class="pill deploy"><div class="pill-dot"></div>Pruebas finales en dispositivos reales del equipo</div>
+        <div class="pill deploy"><div class="pill-dot"></div>Correcciones post-QA y ajuste de detalles</div>
+        <div class="pill deploy"><div class="pill-dot"></div>Capacitación al patrón y agentes (videollamada)</div>
+        <div class="payment-banner pay3">
+          <div class="payment-num">3</div>
+          <div class="payment-info">
+            <div class="payment-title">Pago 3 — Al entregar APK final con todo funcionando</div>
+            <div class="payment-detail">App completa + notificaciones + capacitación incluida</div>
+          </div>
+          <div class="payment-amount">$15,600</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL FOOTER -->
+  <div class="total-footer">
+    <div>
+      <div class="tf-label">Resumen del proyecto</div>
+      <div class="tf-value" style="color:rgba(255,255,255,0.8);font-size:13px;font-weight:400;line-height:1.7">
+        3 pagos iguales de $15,600 MXN<br>
+        Cada pago ligado a un entregable demostrable
+      </div>
+    </div>
+    <div class="tf-divider"></div>
+    <div>
+      <div class="tf-label">Inicio</div>
+      <div class="tf-value">5 Mayo 2026</div>
+    </div>
+    <div class="tf-divider"></div>
+    <div>
+      <div class="tf-label">Entrega</div>
+      <div class="tf-value">25 Julio 2026</div>
+    </div>
+    <div class="tf-divider"></div>
+    <div class="tf-total">
+      <div class="tf-label">Total</div>
+      <div class="tf-value">$46,800 MXN</div>
+    </div>
+  </div>
+
+  <!-- DOC FOOTER -->
+  <div class="doc-footer">
+    <span>Calendario de desarrollo · App Móvil de Gestión de Préstamos</span>
+    <span>Ref: DOC-2026-001 + DOC-2026-002</span>
+  </div>
+
+</div>
+</body>
+</html>
