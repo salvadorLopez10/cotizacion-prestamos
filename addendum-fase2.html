@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propuesta Fase 2 — Nuevas Funcionalidades · DOC-2026-003</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --cream: #faf8f4;
+    --white: #ffffff;
+    --ink: #1a1a2e;
+    --ink2: #2d2d44;
+    --muted: #7c7c96;
+    --border: #e8e4dc;
+    --accent: #1a4b8c;
+    --accent-light: #eef3fb;
+    --accent2: #0e7c5a;
+    --accent2-light: #eaf7f2;
+    --gold: #b8933a;
+    --gold-light: #fdf6e7;
+    --orange: #c75c1a;
+    --orange-light: #fdf2eb;
+    --red: #c0392b;
+    --red-light: #fdf0ee;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  @media print {
+    body { background: white; }
+    .no-print { display: none; }
+  }
+
+  .document {
+    max-width: 860px;
+    margin: 0 auto;
+    background: var(--white);
+    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+  }
+
+  /* ─── HEADER ─── */
+  .doc-header {
+    background: var(--ink);
+    padding: 48px 56px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(26,75,140,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .doc-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(14,124,90,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .phase-ribbon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(26,75,140,0.2);
+    border: 1px solid rgba(26,75,140,0.4);
+    border-radius: 6px;
+    padding: 5px 14px;
+    margin-bottom: 20px;
+  }
+  .phase-ribbon span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7eb3f5;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 24px;
+  }
+  .doc-title { font-family: var(--serif); font-size: 28px; color: #fff; line-height: 1.15; font-weight: 700; }
+  .doc-subtitle { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 6px; font-weight: 300; }
+  .doc-meta { text-align: right; flex-shrink: 0; }
+  .doc-meta .folio { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; font-family: monospace; margin-bottom: 4px; }
+  .doc-meta .date { font-size: 13px; color: rgba(255,255,255,0.55); }
+
+  .ref-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+  }
+  .ref-icon { font-size: 20px; flex-shrink: 0; }
+  .ref-text { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+  .ref-text strong { color: rgba(255,255,255,0.75); }
+
+  .header-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .hs-item { background: rgba(255,255,255,0.04); padding: 16px 20px; }
+  .hs-label { font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 4px; }
+  .hs-value { font-size: 20px; font-weight: 600; color: #fff; font-family: var(--serif); }
+  .hs-value.green { color: #4ade80; }
+  .hs-value.amber { color: #fbbf24; }
+
+  /* ─── BODY ─── */
+  .doc-body { padding: 52px 56px; }
+
+  .section { margin-bottom: 44px; }
+  .section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .sl-num {
+    width: 26px; height: 26px;
+    background: var(--ink); color: #fff;
+    border-radius: 50%; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sl-title { font-family: var(--serif); font-size: 19px; color: var(--ink); font-weight: 700; }
+  .sl-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* INTRO */
+  .intro-text {
+    font-size: 14px; color: var(--muted); line-height: 1.85;
+    padding: 20px 24px;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+  }
+  .intro-text strong { color: var(--ink2); }
+
+  /* METODOLOGÍA */
+  .metod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .metod-card {
+    padding: 18px 20px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .metod-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .metod-icon { font-size: 20px; }
+  .metod-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .metod-pct {
+    margin-left: auto;
+    font-size: 18px; font-weight: 700;
+    font-family: var(--serif);
+    color: var(--accent);
+  }
+  .metod-bar-bg { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 8px; }
+  .metod-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+  .metod-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* FUNC TABLE */
+  .func-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .func-table thead tr { background: var(--ink); color: #fff; }
+  .func-table th {
+    padding: 11px 14px; text-align: left;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .func-table th:last-child, .func-table th:nth-child(3) { text-align: center; }
+  .func-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .func-table tr:last-child td { border-bottom: none; }
+  .func-table td:nth-child(3), .func-table td:last-child { text-align: center; }
+  .func-table .group-row td {
+    background: var(--cream); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    padding: 7px 14px; border-bottom: 1px solid var(--border);
+  }
+  .func-table .total-row td {
+    background: var(--ink); color: #fff; font-weight: 700;
+    font-size: 14px; padding: 14px 16px; border: none;
+  }
+  .func-table .total-row td:last-child { color: #4ade80; font-size: 16px; }
+  .func-name { font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .func-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .badge-comp { display: inline-flex; gap: 3px; flex-wrap: wrap; justify-content: center; }
+  .comp-tag { font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 3px; letter-spacing: 0.05em; }
+  .comp-tag.schema { background: rgba(139,92,246,0.12); color: #6d28d9; }
+  .comp-tag.backend { background: rgba(14,124,90,0.1); color: #065f46; }
+  .comp-tag.web { background: rgba(26,75,140,0.1); color: #1e3a5f; }
+  .comp-tag.app { background: rgba(199,92,26,0.1); color: #7c2d12; }
+  .comp-tag.cron { background: rgba(220,38,38,0.1); color: #991b1b; }
+
+  .hrs-badge {
+    display: inline-block; font-size: 12px; font-weight: 700;
+    color: var(--ink2); background: var(--cream);
+    border: 1px solid var(--border); padding: 2px 10px; border-radius: 20px;
+  }
+
+  /* HORAS DESGLOSE */
+  .hrs-breakdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .hrs-item {
+    text-align: center;
+    padding: 14px 10px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .hrs-item-pct { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .hrs-item-label { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+  .hrs-item-detail { font-size: 10px; color: var(--muted); margin-top: 6px; font-style: italic; line-height: 1.4; }
+
+  /* ESCENARIOS */
+  .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .scenario-card {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .scenario-header { padding: 14px 18px 12px; }
+  .scenario-header.opt { background: var(--accent2-light); border-bottom: 2px solid var(--accent2); }
+  .scenario-header.real { background: var(--accent-light); border-bottom: 2px solid var(--accent); }
+  .scenario-header.cons { background: var(--gold-light); border-bottom: 2px solid var(--gold); }
+  .scenario-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+  .scenario-tag.opt { color: var(--accent2); }
+  .scenario-tag.real { color: var(--accent); }
+  .scenario-tag.cons { color: var(--gold); }
+  .scenario-weeks { font-family: var(--serif); font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1; }
+  .scenario-date { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .scenario-body { padding: 14px 18px; background: var(--white); }
+  .scenario-cond { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .scenario-cond li { margin-left: 14px; margin-bottom: 3px; }
+
+  /* ENTREGAS PARCIALES */
+  .delivery-timeline { position: relative; padding-left: 24px; }
+  .delivery-timeline::before {
+    content: '';
+    position: absolute; left: 7px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent2), var(--accent), var(--gold));
+  }
+  .dl-item { margin-bottom: 20px; position: relative; }
+  .dl-dot {
+    position: absolute; left: -24px; top: 5px;
+    width: 10px; height: 10px;
+    border-radius: 50%; border: 2px solid var(--accent2);
+    background: var(--white);
+  }
+  .dl-item:nth-child(2) .dl-dot { border-color: var(--accent); }
+  .dl-item:nth-child(3) .dl-dot { border-color: var(--gold); }
+  .dl-week { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); margin-bottom: 4px; font-family: var(--sans); }
+  .dl-item:nth-child(2) .dl-week { color: var(--accent); }
+  .dl-item:nth-child(3) .dl-week { color: var(--gold); }
+  .dl-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .dl-funcs { display: flex; flex-wrap: wrap; gap: 5px; }
+  .dl-func-tag {
+    font-size: 11px; padding: 2px 10px;
+    background: var(--cream); border: 1px solid var(--border);
+    border-radius: 20px; color: var(--ink2);
+  }
+
+  /* OBSERVACIONES */
+  .obs-list { display: flex; flex-direction: column; gap: 10px; }
+  .obs-item {
+    display: flex; gap: 14px; padding: 14px 18px;
+    border-radius: 10px; font-size: 13px; line-height: 1.7;
+  }
+  .obs-item.amber { background: var(--gold-light); border: 1px solid rgba(184,147,58,0.25); color: #7a5e1a; }
+  .obs-item.blue { background: var(--accent-light); border: 1px solid rgba(26,75,140,0.15); color: #1a3a6e; }
+  .obs-icon { font-size: 16px; flex-shrink: 0; padding-top: 2px; }
+
+  /* PAGOS */
+  .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .payment-card {
+    text-align: center; padding: 22px 16px;
+    background: var(--cream); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .payment-card.p1 { border-top: 3px solid var(--accent); }
+  .payment-card.p2 { border-top: 3px solid var(--accent2); }
+  .payment-card.p3 { border-top: 3px solid var(--gold); }
+  .payment-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .payment-amount { font-family: var(--serif); font-size: 26px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .payment-note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* CALLOUTS */
+  .callout {
+    display: flex; gap: 14px; padding: 16px 20px;
+    border-radius: 10px; margin-top: 12px; font-size: 13px; line-height: 1.7;
+  }
+  .callout.green { background: var(--accent2-light); border: 1px solid rgba(14,124,90,0.2); color: #0a5c43; }
+  .callout.blue { background: var(--accent-light); border: 1px solid rgba(26,75,140,0.15); color: #1a3a6e; }
+  .callout.amber { background: var(--gold-light); border: 1px solid rgba(184,147,58,0.25); color: #7a5e1a; }
+  .callout-icon { font-size: 18px; flex-shrink: 0; padding-top: 1px; }
+
+  /* SIGNATURE */
+  .signature-area {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--border);
+  }
+  .sig-box { text-align: center; }
+  .sig-line { height: 1px; background: var(--border); margin: 40px 0 8px; }
+  .sig-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* TERMS */
+  .terms {
+    background: var(--cream); padding: 28px 56px;
+    border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.8;
+  }
+  .terms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .terms-block-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2); margin-bottom: 8px; }
+
+  /* FOOTER */
+  .doc-footer {
+    background: var(--ink); padding: 24px 56px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand { font-family: var(--serif); font-size: 15px; color: rgba(255,255,255,0.7); }
+  .footer-brand span { color: rgba(255,255,255,0.3); font-size: 12px; font-family: var(--sans); display: block; margin-top: 2px; }
+  .footer-valid { font-size: 12px; color: rgba(255,255,255,0.35); text-align: right; }
+
+  @media (max-width: 640px) {
+    .doc-header, .doc-body { padding: 32px 24px; }
+    .header-top { flex-direction: column; }
+    .header-summary, .metod-grid, .scenarios-grid { grid-template-columns: 1fr; }
+    .hrs-breakdown { grid-template-columns: 1fr 1fr; }
+    .payment-grid { grid-template-columns: 1fr; }
+    .terms { padding: 24px; }
+    .terms-grid { grid-template-columns: 1fr; }
+    .doc-footer { padding: 20px 24px; flex-direction: column; gap: 12px; text-align: center; }
+    .signature-area { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="document">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="phase-ribbon">
+      <span>Fase 2 · DOC-2026-003 · Nuevas Funcionalidades</span>
+    </div>
+    <div class="header-top">
+      <div>
+        <div class="doc-title">Propuesta de Desarrollo<br>Fase 2</div>
+        <div class="doc-subtitle">Nuevas funcionalidades · App Móvil de Gestión de Préstamos</div>
+      </div>
+      <div class="doc-meta">
+        <div class="folio">REF: DOC-2026-001 · DOC-2026-002</div>
+        <div class="date">Julio 2026</div>
+      </div>
+    </div>
+
+    <div class="ref-box">
+      <span class="ref-icon">📄</span>
+      <div class="ref-text">
+        Este documento es <strong>independiente</strong> de las propuestas anteriores (DOC-2026-001 y DOC-2026-002), cuyo desarrollo fue completado y entregado como versión beta. Las funcionalidades aquí descritas fueron identificadas durante la <strong>sesión de demo con el equipo directivo</strong>, en donde se validaron los flujos de la aplicación y se obtuvo la autorización formal para continuar con el proyecto.
+      </div>
+    </div>
+
+    <div class="header-summary">
+      <div class="hs-item">
+        <div class="hs-label">Funcionalidades</div>
+        <div class="hs-value">13</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-label">Horas estimadas</div>
+        <div class="hs-value amber">130 hrs</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-label">Inversión Fase 2</div>
+        <div class="hs-value green">$26,000 MXN</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="doc-body">
+
+    <!-- 1. Contexto -->
+    <div class="section">
+      <div class="section-label">
+        <div class="sl-num">1</div>
+        <div class="sl-title">Contexto</div>
+        <div class="sl-line"></div>
+      </div>
+      <div class="intro-text">
+        Tras la entrega de la versión beta de la aplicación y su presentación en una <strong>sesión de demo con el equipo directivo</strong> para validar los flujos y obtener autorización formal, el equipo identificó un conjunto de <strong>mejoras y nuevas funcionalidades</strong> que enriquecen la experiencia de los agentes y del administrador. Este documento formaliza el alcance, la metodología de estimación, los tiempos de entrega y el esquema de pagos de la Fase 2, de manera completamente independiente al desarrollo previo.
+      </div>
+    </div>
+
+    <!-- 2. Metodología de estimación -->
+    <div class="section">
+      <div class="section-label">
+        <div class="sl-num">2</div>
+        <div class="sl-title">¿Cómo se estiman las horas?</div>
+        <div class="sl-line"></div>
+      </div>
+
+      <p style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.8">
+        Las horas estimadas por funcionalidad no representan únicamente el tiempo de escritura de código. Cada hora cubre un ciclo completo de trabajo que garantiza que lo que se entrega funciona correctamente y no afecta lo que ya existe en la aplicación.
+      </p>
+
+      <div class="metod-grid">
+        <div class="metod-card">
+          <div class="metod-card-top">
+            <span class="metod-icon">🔍</span>
+            <span class="metod-title">Análisis y diseño</span>
+            <span class="metod-pct">15%</span>
+          </div>
+          <div class="metod-bar-bg"><div class="metod-bar-fill" style="width:15%;background:var(--accent)"></div></div>
+          <div class="metod-desc">Entender el flujo exacto que el cliente necesita, definir cómo se conecta con lo que ya existe y diseñar la solución antes de escribir código.</div>
+        </div>
+        <div class="metod-card">
+          <div class="metod-card-top">
+            <span class="metod-icon">⚙️</span>
+            <span class="metod-title">Desarrollo e integración</span>
+            <span class="metod-pct">50%</span>
+          </div>
+          <div class="metod-bar-bg"><div class="metod-bar-fill" style="width:50%;background:var(--accent2)"></div></div>
+          <div class="metod-desc">Implementación de la funcionalidad en el servidor, la app móvil y/o el panel web, asegurando que se integra correctamente con el sistema existente.</div>
+        </div>
+        <div class="metod-card">
+          <div class="metod-card-top">
+            <span class="metod-icon">🧪</span>
+            <span class="metod-title">Pruebas y validación</span>
+            <span class="metod-pct">25%</span>
+          </div>
+          <div class="metod-bar-bg"><div class="metod-bar-fill" style="width:25%;background:var(--gold)"></div></div>
+          <div class="metod-desc">Verificación de que la funcionalidad opera correctamente en todos los escenarios posibles y que no afecta el comportamiento de las funcionalidades anteriores.</div>
+        </div>
+        <div class="metod-card">
+          <div class="metod-card-top">
+            <span class="metod-icon">🚀</span>
+            <span class="metod-title">Deploy y ajustes</span>
+            <span class="metod-pct">10%</span>
+          </div>
+          <div class="metod-bar-bg"><div class="metod-bar-fill" style="width:10%;background:var(--orange)"></div></div>
+          <div class="metod-desc">Publicación en el servidor de producción, actualización de la app en los dispositivos del equipo y correcciones menores derivadas de la operación real.</div>
+        </div>
+      </div>
+
+      <div class="callout blue">
+        <span class="callout-icon">💡</span>
+        <span>Al tratarse de una continuación del mismo proyecto con toda la arquitectura ya definida y documentada, el tiempo de análisis es significativamente menor al de un desarrollo desde cero. El conocimiento acumulado sobre el negocio, los flujos validados en la demo y la base de código existente se traducen directamente en una estimación más ajustada y menor riesgo de sobrecostos.</span>
+      </div>
+    </div>
+
+    <!-- 3. Funcionalidades -->
+    <div class="section">
+      <div class="section-label">
+        <div class="sl-num">3</div>
+        <div class="sl-title">Desglose de Funcionalidades</div>
+        <div class="sl-line"></div>
+      </div>
+
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <table class="func-table">
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:42%">Funcionalidad</th>
+              <th style="width:23%">Componentes</th>
+              <th style="width:10%">Horas</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="group-row"><td colspan="4">Información del Cliente</td></tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">01</td>
+              <td>
+                <div class="func-name">Domicilio de trabajo</div>
+                <div class="func-desc">Campos de dirección laboral con pin independiente en Google Maps en el panel web</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag schema">Schema</span><span class="comp-tag backend">Backend</span><span class="comp-tag web">Panel web</span></div></td>
+              <td><span class="hrs-badge">6 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">02</td>
+              <td>
+                <div class="func-name">Evidencia de recomendación</div>
+                <div class="func-desc">Nuevo tipo de documento para captura de pantalla del mensaje de quien recomendó al cliente</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag schema">Schema</span><span class="comp-tag backend">Backend</span><span class="comp-tag web">Panel web</span></div></td>
+              <td><span class="hrs-badge">2 hrs</span></td>
+            </tr>
+
+            <tr class="group-row"><td colspan="4">App Móvil — Agente</td></tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">03</td>
+              <td>
+                <div class="func-name">Detalle completo de cliente (agente)</div>
+                <div class="func-desc">Al tocar un cliente en la lista, se abre pantalla completa con datos personales, documentos e historial de pagos</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag app">App móvil</span></div></td>
+              <td><span class="hrs-badge">8 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">04</td>
+              <td>
+                <div class="func-name">Calendario de pagos futuros</div>
+                <div class="func-desc">Vista de calendario con los próximos cobros del agente marcados por fecha para planificar la jornada</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag backend">Backend</span><span class="comp-tag app">App móvil</span></div></td>
+              <td><span class="hrs-badge">10 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">09</td>
+              <td>
+                <div class="func-name">Préstamos vencidos aparecen diariamente</div>
+                <div class="func-desc">Una vez vencido el ciclo, el préstamo aparece en la lista del agente cada día hasta liquidarse, sin interferir con el cálculo de multas</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag schema">Schema</span><span class="comp-tag backend">Backend</span><span class="comp-tag cron">Cron</span></div></td>
+              <td><span class="hrs-badge">7 hrs</span></td>
+            </tr>
+
+            <tr class="group-row"><td colspan="4">App Móvil — Admin</td></tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">06</td>
+              <td>
+                <div class="func-name">Detalle completo de cliente (admin)</div>
+                <div class="func-desc">El administrador accede al detalle completo de cualquier cliente sin restricción de equipo</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag app">App móvil</span></div></td>
+              <td><span class="hrs-badge">3 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">07</td>
+              <td>
+                <div class="func-name">Dashboard admin enriquecido</div>
+                <div class="func-desc">Desglose completo: efectivo vs transferencia, intereses vs multas, quiénes liquidaron vs quiénes pagaron solo interés, totales por equipo</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag backend">Backend</span><span class="comp-tag app">App móvil</span></div></td>
+              <td><span class="hrs-badge">12 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">11</td>
+              <td>
+                <div class="func-name">Historial de pagos con filtros</div>
+                <div class="func-desc">Consulta de pagos por rango de fechas y por agente, con vista de pagos futuros integrada al calendario</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag backend">Backend</span><span class="comp-tag app">App móvil</span><span class="comp-tag web">Panel web</span></div></td>
+              <td><span class="hrs-badge">10 hrs</span></td>
+            </tr>
+
+            <tr class="group-row"><td colspan="4">Pagos y Control Financiero</td></tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">10</td>
+              <td>
+                <div class="func-name">División de pago + catálogo de tarjetas</div>
+                <div class="func-desc">Registro de pagos divididos (efectivo + transferencia) con selección de tarjeta/cuenta destino gestionada desde el panel web</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag schema">Schema</span><span class="comp-tag backend">Backend</span><span class="comp-tag app">App móvil</span><span class="comp-tag web">Panel web</span></div></td>
+              <td><span class="hrs-badge">14 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">14</td>
+              <td>
+                <div class="func-name">Sistema de multas con dos cortes diarios</div>
+                <div class="func-desc">Dos disparos diarios a las 13:30 y 22:00. Multa escalonada por ciclo: $50/corte en ciclo 1, $100/corte en ciclo 2, $150/corte en ciclo 3 y así sucesivamente</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag schema">Schema</span><span class="comp-tag cron">Cron</span><span class="comp-tag backend">Backend</span></div></td>
+              <td><span class="hrs-badge">12 hrs</span></td>
+            </tr>
+
+            <tr class="group-row"><td colspan="4">Nuevos Módulos</td></tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">05</td>
+              <td>
+                <div class="func-name">Función caja ⚠️</div>
+                <div class="func-desc">Control del fondo diario de caja. El SUPER_ADMIN define el monto inicial del día. Los agentes registran préstamos extraordinarios descontados del fondo con notificación al admin. <strong>Estimación provisional sujeta a ajuste.</strong></div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag schema">Schema</span><span class="comp-tag backend">Backend</span><span class="comp-tag app">App móvil</span><span class="comp-tag web">Panel web</span></div></td>
+              <td><span class="hrs-badge">20 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">12</td>
+              <td>
+                <div class="func-name">Módulo de acuerdos</div>
+                <div class="func-desc">El administrador propone nuevos montos negociados de interés y multa para clientes con deuda alta. El préstamo se recalcula y aparece actualizado en la jornada del agente</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag schema">Schema</span><span class="comp-tag backend">Backend</span><span class="comp-tag app">App móvil</span><span class="comp-tag web">Panel web</span></div></td>
+              <td><span class="hrs-badge">16 hrs</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-size:12px">13</td>
+              <td>
+                <div class="func-name">Importación masiva desde Excel</div>
+                <div class="func-desc">Carga de clientes en lote desde archivo .xlsx con previsualización antes de confirmar la importación</div>
+              </td>
+              <td><div class="badge-comp"><span class="comp-tag backend">Backend</span><span class="comp-tag web">Panel web</span></div></td>
+              <td><span class="hrs-badge">10 hrs</span></td>
+            </tr>
+
+            <tr class="total-row">
+              <td colspan="2">Total estimado · Fase 2</td>
+              <td style="text-align:center;color:rgba(255,255,255,0.6);font-size:13px">130 hrs</td>
+              <td>$26,000 MXN</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout blue" style="margin-top:14px">
+        <span class="callout-icon">ℹ️</span>
+        <span>La tarifa aplicada es de <strong>$200 MXN por hora</strong>, consistente con los documentos anteriores. El total se estableció a $26,000 MXN para simplificar el esquema de pagos.</span>
+      </div>
+    </div>
+
+    <!-- 4. Tiempos de entrega -->
+    <div class="section">
+      <div class="section-label">
+        <div class="sl-num">4</div>
+        <div class="sl-title">Tiempos Estimados de Entrega</div>
+        <div class="sl-line"></div>
+      </div>
+
+      <p style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.8">
+        El desarrollo se realizará en paralelo al trabajo principal del desarrollador, con sesiones diarias de aproximadamente 3 horas. Los tres escenarios a continuación representan rangos realistas según el ritmo de avance y la complejidad de las validaciones requeridas.
+      </p>
+
+      <div class="scenarios-grid">
+        <div class="scenario-card">
+          <div class="scenario-header opt">
+            <div class="scenario-tag opt">Escenario Optimista</div>
+            <div class="scenario-weeks">6 semanas</div>
+            <div class="scenario-date">Entrega estimada: ~finales de Agosto 2026</div>
+          </div>
+          <div class="scenario-body">
+            <div class="scenario-cond">
+              <ul>
+                <li>Ritmo constante de 3 hrs/día sin interrupciones</li>
+                <li>Flujo de Función Caja definido en la primera semana</li>
+                <li>Sin cambios de alcance durante el desarrollo</li>
+                <li>Validaciones del cliente en menos de 2 días por entregable</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-header real">
+            <div class="scenario-tag real">Escenario Realista</div>
+            <div class="scenario-weeks">8 semanas</div>
+            <div class="scenario-date">Entrega estimada: ~mediados de Septiembre 2026</div>
+          </div>
+          <div class="scenario-body">
+            <div class="scenario-cond">
+              <ul>
+                <li>Semanas con menor disponibilidad por trabajo principal</li>
+                <li>Una ronda de ajustes por entregable al validar con el cliente</li>
+                <li>Pruebas del sistema de multas requieren tiempo extra</li>
+                <li>Función Caja requiere al menos una sesión de refinamiento</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-header cons">
+            <div class="scenario-tag cons">Escenario Conservador</div>
+            <div class="scenario-weeks">10 semanas</div>
+            <div class="scenario-date">Entrega estimada: ~finales de Septiembre 2026</div>
+          </div>
+          <div class="scenario-body">
+            <div class="scenario-cond">
+              <ul>
+                <li>Semanas con baja disponibilidad por carga laboral principal</li>
+                <li>Redefinición del flujo de Función Caja tras primera versión</li>
+                <li>Ajustes adicionales en sistema de multas al probar en producción</li>
+                <li>Cambios de alcance en funcionalidades durante el desarrollo</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entregas parciales -->
+      <div style="margin-top:28px">
+        <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:16px;text-transform:uppercase;letter-spacing:0.05em">Entregas parciales (escenario realista)</div>
+        <div class="delivery-timeline">
+          <div class="dl-item">
+            <div class="dl-dot"></div>
+            <div class="dl-week">Semanas 1–3 · Primer entregable</div>
+            <div class="dl-title">Información de cliente + App del agente</div>
+            <div class="dl-funcs">
+              <span class="dl-func-tag">01 Domicilio trabajo</span>
+              <span class="dl-func-tag">02 Evidencia recomendación</span>
+              <span class="dl-func-tag">03 Detalle cliente agente</span>
+              <span class="dl-func-tag">06 Detalle cliente admin</span>
+              <span class="dl-func-tag">09 Visitas diarias</span>
+            </div>
+          </div>
+          <div class="dl-item">
+            <div class="dl-dot"></div>
+            <div class="dl-week">Semanas 4–6 · Segundo entregable</div>
+            <div class="dl-title">Control financiero + Dashboard admin</div>
+            <div class="dl-funcs">
+              <span class="dl-func-tag">04 Calendario futuros</span>
+              <span class="dl-func-tag">07 Dashboard enriquecido</span>
+              <span class="dl-func-tag">10 División pago + tarjetas</span>
+              <span class="dl-func-tag">11 Historial con filtros</span>
+            </div>
+          </div>
+          <div class="dl-item">
+            <div class="dl-dot"></div>
+            <div class="dl-week">Semanas 7–8 · Tercer entregable</div>
+            <div class="dl-title">Módulos nuevos + Sistema de multas</div>
+            <div class="dl-funcs">
+              <span class="dl-func-tag">05 Función caja</span>
+              <span class="dl-func-tag">12 Módulo acuerdos</span>
+              <span class="dl-func-tag">13 Importación Excel</span>
+              <span class="dl-func-tag">14 Multas dos cortes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Observaciones -->
+    <div class="section">
+      <div class="section-label">
+        <div class="sl-num">5</div>
+        <div class="sl-title">Observaciones Importantes</div>
+        <div class="sl-line"></div>
+      </div>
+      <div class="obs-list">
+        <div class="obs-item amber">
+          <span class="obs-icon">⚠️</span>
+          <div><strong>Función Caja (punto 05) — estimación provisional:</strong> Las 20 horas son una estimación con base en el flujo descrito hasta ahora. Antes de iniciar su desarrollo se agendará una sesión de definición con el cliente. Si el flujo final resulta más complejo, el tiempo se ajustará y se notificará antes de proceder.</div>
+        </div>
+        <div class="obs-item amber">
+          <span class="obs-icon">⚠️</span>
+          <div><strong>Sistema de multas (punto 14) — reemplazo del cron actual:</strong> El cron existente será reemplazado en su totalidad. Se requieren pruebas exhaustivas con distintos escenarios de ciclos antes de activarlo en producción para garantizar que los cálculos sean correctos en todos los casos.</div>
+        </div>
+        <div class="obs-item blue">
+          <span class="obs-icon">💡</span>
+          <div><strong>Préstamos vencidos diarios (punto 09):</strong> Para evitar conflictos con el cálculo de multas, se agrega un campo independiente <em>fechaProximaVisita</em> que controla cuándo aparece el préstamo en la lista del agente, sin modificar la <em>fechaVencimiento</em> original que usa el cron.</div>
+        </div>
+        <div class="obs-item blue">
+          <span class="obs-icon">💡</span>
+          <div><strong>Calendario y historial (puntos 04 y 11):</strong> Se recomienda unificar en una sola arquitectura los pagos futuros del agente y del admin, evitando duplicación de lógica y facilitando el mantenimiento a largo plazo.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Esquema de pagos -->
+    <div class="section">
+      <div class="section-label">
+        <div class="sl-num">6</div>
+        <div class="sl-title">Esquema de Pagos</div>
+        <div class="sl-line"></div>
+      </div>
+      <div class="payment-grid">
+        <div class="payment-card p1">
+          <div class="payment-label">Primera Exhibición</div>
+          <div class="payment-amount">$8,700</div>
+          <div class="payment-note">Al confirmar esta propuesta<br>Inicio formal del desarrollo</div>
+        </div>
+        <div class="payment-card p2">
+          <div class="payment-label">Segunda Exhibición</div>
+          <div class="payment-amount">$8,700</div>
+          <div class="payment-note">Al entregar el segundo bloque<br>Funcionalidades 04, 07, 10, 11</div>
+        </div>
+        <div class="payment-card p3">
+          <div class="payment-label">Tercera Exhibición</div>
+          <div class="payment-amount">$8,600</div>
+          <div class="payment-note">Al entregar el tercer bloque<br>Funcionalidades 05, 12, 13, 14</div>
+        </div>
+      </div>
+      <div class="callout green" style="margin-top:14px">
+        <span class="callout-icon">🤝</span>
+        <span>Cada pago se realiza únicamente al recibir y confirmar el funcionamiento del bloque de entregables correspondiente. El primer bloque (funcionalidades 01–03, 06, 09) está incluido en la primera exhibición y se entrega antes de recibir el segundo pago.</span>
+      </div>
+    </div>
+
+    <!-- Firma -->
+    <div class="signature-area">
+      <div class="sig-box">
+        <div class="sig-line"></div>
+        <div class="sig-label">Firma del Cliente · Aceptación</div>
+      </div>
+      <div class="sig-box">
+        <div class="sig-line"></div>
+        <div class="sig-label">Desarrollador · Nombre y Firma</div>
+      </div>
+    </div>
+
+  </div><!-- /doc-body -->
+
+  <!-- TERMS -->
+  <div class="terms">
+    <div class="terms-grid">
+      <div>
+        <div class="terms-block-title">Alcance y cambios</div>
+        Este documento cubre exclusivamente las 13 funcionalidades descritas. Cualquier funcionalidad adicional no contemplada será cotizada por separado antes de su implementación.
+      </div>
+      <div>
+        <div class="terms-block-title">Vigencia</div>
+        Esta propuesta tiene vigencia de <strong>30 días naturales</strong> a partir de su emisión. Transcurrido este plazo sin confirmación, los tiempos de entrega deberán renegociarse.
+      </div>
+      <div>
+        <div class="terms-block-title">Ajuste de estimación</div>
+        La Función Caja (punto 05) está marcada como estimación provisional. Cualquier ajuste será comunicado y acordado con el cliente antes de iniciar su desarrollo.
+      </div>
+      <div>
+        <div class="terms-block-title">Soporte post-entrega</div>
+        Se incluyen <strong>30 días de soporte</strong> para corrección de errores en las funcionalidades de esta fase. Ajustes adicionales o nuevas funcionalidades se cotizan por separado.
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-brand">
+      Propuesta Fase 2 · Nuevas Funcionalidades
+      <span>App Móvil de Gestión de Préstamos · DOC-2026-003</span>
+    </div>
+    <div class="footer-valid">
+      Vigencia: 30 días naturales<br>
+      Folio: DOC-2026-003
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
