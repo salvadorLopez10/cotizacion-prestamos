@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Guia paso a paso, sin tecnicismos, para conocer todo lo nuevo del sistema de prestamos: panel web, app del cobrador, app del dueno y avisos automaticos.">
+<title>Ruta de Cobranza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Serif+4:ital,wght@1,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #20302A;
+    --muted: #5B6A5F;
+    --paper: #EFE9D8;
+    --surface: #FAF7EC;
+    --surface-2: #E7E0CB;
+    --line: rgba(32,48,42,0.18);
+    --accent: #A9762F;
+    --accent-ink: #FFFFFF;
+    --stamp-red: #9C4A32;
+    --stamp-red-ink: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ECE6D4;
+      --muted: #A9B3A6;
+      --paper: #16241E;
+      --surface: #1C2C25;
+      --surface-2: #24362D;
+      --line: rgba(236,230,212,0.16);
+      --accent: #D6A44F;
+      --accent-ink: #1B1408;
+      --stamp-red: #E09A80;
+      --stamp-red-ink: #33130A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ECE6D4;
+    --muted: #A9B3A6;
+    --paper: #16241E;
+    --surface: #1C2C25;
+    --surface-2: #24362D;
+    --line: rgba(236,230,212,0.16);
+    --accent: #D6A44F;
+    --accent-ink: #1B1408;
+    --stamp-red: #E09A80;
+    --stamp-red-ink: #33130A;
+  }
+
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    line-height: 1.68;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  a { color: inherit; text-decoration-color: var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+  h1, h2, h3, .eyebrow, .mono {
+    font-family: 'Archivo', 'Arial Narrow', sans-serif;
+  }
+  h1 { text-wrap: balance; }
+  h2 { text-wrap: balance; }
+
+  /* ---------- Portada ---------- */
+  .portada {
+    padding: 3.2rem 0 2.4rem;
+    border-bottom: 3px solid var(--ink);
+  }
+  .portada .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .74rem;
+    font-weight: 600;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 .9rem;
+  }
+  .portada h1 {
+    font-weight: 900;
+    font-size: clamp(2.1rem, 6vw, 3.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin: 0 0 1rem;
+  }
+  .portada .lede {
+    max-width: 62ch;
+    color: var(--ink);
+    font-size: 1.12rem;
+    margin: 0 0 1.6rem;
+  }
+  .portada .lede em { font-style: italic; color: var(--muted); }
+
+  .stamp-note {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1.5px dashed var(--ink);
+    border-radius: 3px;
+    padding: .5rem .8rem;
+  }
+
+  /* ---------- Índice ---------- */
+  .indice {
+    margin: 2.2rem 0;
+    padding: 1.3rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .indice .eyebrow { margin: 0 0 .8rem; }
+  .indice ol { margin: 0; padding: 0 0 0 0; list-style: none; display: grid; gap: .5rem; }
+  .indice li { display: flex; gap: .7rem; align-items: baseline; font-size: .96rem; }
+  .indice .num { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-weight: 600; min-width: 1.6em; }
+  .indice a { text-decoration: none; }
+  .indice a:hover { text-decoration: underline; }
+
+  .eyebrow {
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ---------- Secciones "Parte" ---------- */
+  .parte { margin-top: 4rem; scroll-margin-top: 1.5rem; }
+  .parte-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: .7rem;
+    margin-bottom: .3rem;
+  }
+  .parte-head h2 {
+    font-weight: 800;
+    font-size: clamp(1.4rem, 3.4vw, 1.85rem);
+    margin: .15rem 0 0;
+  }
+  .parte-head .donde {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .78rem;
+    color: var(--muted);
+    white-space: nowrap;
+    padding-bottom: .3rem;
+  }
+  .parte-intro { color: var(--muted); font-size: .98rem; margin: 1rem 0 0; max-width: 62ch; }
+
+  /* ---------- Paradas ---------- */
+  .parada {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.1rem;
+    margin-top: 2.4rem;
+    scroll-margin-top: 1.5rem;
+  }
+  .parada .badge {
+    width: 3rem; height: 3rem;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 1.15rem;
+    color: var(--ink);
+    transform: rotate(-4deg);
+  }
+  .parada h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: .3rem 0 .6rem;
+  }
+  .parada .pasos { margin: 0 0 1rem; padding-left: 1.2rem; }
+  .parada .pasos li { margin-bottom: .4rem; }
+  .parada .pasos li::marker { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-weight: 600; }
+
+  .porque {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: .85rem 1rem;
+    font-size: .94rem;
+    color: var(--ink);
+  }
+  .porque .eyebrow { display: block; margin-bottom: .3rem; }
+
+  .notif {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82rem;
+    font-weight: 600;
+    padding: .5rem .85rem;
+    border-radius: 20px;
+    margin: .5rem 0;
+  }
+  .notif .cuerpo { font-weight: 500; opacity: .82; }
+
+  .tip {
+    margin-top: .8rem;
+    background: transparent;
+    border: 1.5px dashed var(--accent);
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    font-size: .92rem;
+    color: var(--ink);
+  }
+  .tip .eyebrow { color: var(--accent); }
+
+  .atencion {
+    background: var(--stamp-red);
+    color: var(--stamp-red-ink);
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    font-size: .92rem;
+    margin-top: .8rem;
+  }
+  .atencion strong { font-family: 'Archivo', sans-serif; }
+
+  /* ---------- Tablas ---------- */
+  .tabla-wrap { overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+  thead th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: .65rem .8rem;
+    border-bottom: 1.5px solid var(--ink);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: .65rem .8rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .num-col { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cred { font-family: 'IBM Plex Mono', monospace; font-size: .85rem; white-space: nowrap; }
+
+  /* ---------- Cierre ---------- */
+  .cierre {
+    margin-top: 4.5rem;
+    padding-top: 2rem;
+    border-top: 3px solid var(--ink);
+  }
+  .cierre h2 { font-weight: 800; font-size: 1.5rem; margin: 0 0 .8rem; }
+  .cierre p { max-width: 62ch; }
+  .firma {
+    margin-top: 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 560px) {
+    .parada { grid-template-columns: 2.4rem 1fr; gap: .8rem; }
+    .parada .badge { width: 2.4rem; height: 2.4rem; font-size: .95rem; }
+  }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+  <header class="portada">
+    <p class="kicker">Guía para conocer el sistema — Fase 2</p>
+    <h1>Ruta de Cobranza</h1>
+    <p class="lede">
+      Esta guía te lleva, paso a paso, por todo lo nuevo que se agregó al sistema:
+      lo que se ve en la computadora, lo que ve cada cobrador en su celular, y lo
+      que tú ves como dueño del negocio. No necesitas saber nada de tecnología —
+      solo sigue cada parada en el orden en que aparece.
+      <br><br>
+      <em>Todo lo que vas a ver aquí ocurre sobre datos de prueba (clientes y
+      préstamos inventados para esta demostración), así que puedes tocar,
+      registrar pagos y explorar sin miedo a romper nada real.</em>
+    </p>
+    <span class="stamp-note">⏱ Tiempo estimado: 20–25 minutos</span>
+  </header>
+
+  <nav class="indice">
+    <p class="eyebrow">En esta guía</p>
+    <ol>
+      <li><span class="num">01</span><a href="#accesos">Cuentas que vas a usar</a></li>
+      <li><span class="num">02</span><a href="#parte-1">Parte 1 — Desde la computadora</a></li>
+      <li><span class="num">03</span><a href="#parte-2">Parte 2 — Celular de un cobrador</a></li>
+      <li><span class="num">04</span><a href="#parte-3">Parte 3 — Celular del dueño</a></li>
+      <li><span class="num">05</span><a href="#parte-4">Parte 4 — Los avisos automáticos</a></li>
+    </ol>
+  </nav>
+
+  <section id="accesos">
+    <p class="eyebrow">Antes de empezar</p>
+    <h2 style="font-weight:800; font-size:1.4rem; margin:.4rem 0 .8rem;">Las cuentas que vas a usar</h2>
+    <p style="color:var(--muted); max-width:62ch;">
+      Durante esta demostración vas a entrar con distintas cuentas para ver el
+      sistema desde cada punto de vista. Cada una ya tiene información cargada
+      — no necesitas escribir nada para empezar a ver resultados.
+    </p>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr><th>Cuenta</th><th>Para qué sirve</th><th>Usuario</th><th>Contraseña</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Administración general<br><span style="color:var(--muted); font-size:.85rem;">(computadora)</span></td><td>Da de alta clientes, préstamos, tarjetas y acuerdos</td><td class="cred">salvador@prestamos.com</td><td class="cred">password123</td></tr>
+          <tr><td>Dueño del negocio<br><span style="color:var(--muted); font-size:.85rem;">(celular)</span></td><td>Ve el resumen de todo, sin poder editar nada</td><td class="cred">admin@prestamos.com</td><td class="cred">password123</td></tr>
+          <tr><td>Cobrador — Carlos<br><span style="color:var(--muted); font-size:.85rem;">(celular, equipo 20 días)</span></td><td>Cobra y registra pagos de su equipo</td><td class="cred">carlos@prestamos.com</td><td class="cred">password123</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted); font-size:.9rem;">
+      Panel de computadora: <a href="https://prestamos-app-495705.web.app">prestamos-app-495705.web.app</a>
+    </p>
+  </section>
+
+  <!-- ================= PARTE 1 ================= -->
+  <section class="parte" id="parte-1">
+    <div class="parte-head">
+      <h2>Parte 1 — Desde la computadora</h2>
+      <span class="donde">Cuenta: Administración general</span>
+    </div>
+    <p class="parte-intro">
+      Entra a <strong>prestamos-app-495705.web.app</strong> con la cuenta de
+      administración general. Aquí es donde se da de alta a los clientes, se
+      arman los préstamos y se resuelven los casos especiales.
+    </p>
+
+    <div class="parada">
+      <span class="badge">1</span>
+      <div>
+        <h3>La ficha completa de un cliente, con dos domicilios en el mapa</h3>
+        <ol class="pasos">
+          <li>Entra a <strong>Clientes</strong> y abre a <strong>Fernando López Cruz</strong>.</li>
+          <li>Baja hasta <strong>Domicilio de trabajo</strong> — además de su casa, ahora también se guarda dónde trabaja.</li>
+          <li>Justo abajo aparece un mapa con dos puntos: uno para su casa y otro para su trabajo. Tócalos y se abre la dirección de cada uno.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Si un cliente no está en casa, ahora se sabe dónde más se le puede
+          buscar — sin tener que llamarlo para preguntar.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">2</span>
+      <div>
+        <h3>Un documento nuevo: evidencia de quién recomendó al cliente</h3>
+        <ol class="pasos">
+          <li>En la lista de Clientes, entra a <strong>Docs</strong> en cualquiera.</li>
+          <li>Entre los documentos verás uno nuevo: <strong>Evidencia de recomendación</strong>.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Queda guardado quién recomendó a cada cliente nuevo, con una prueba
+          — no solo de palabra.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">3</span>
+      <div>
+        <h3>Dar de alta muchos clientes a la vez, con una plantilla de Excel</h3>
+        <ol class="pasos">
+          <li>Junto a <strong>Importar desde Excel</strong> verás <strong>Descargar plantilla</strong> — bájala primero.</li>
+          <li>Llena la plantilla con los datos de los clientes nuevos (o pruébala con 2-3 filas de ejemplo) y súbela con <strong>Importar desde Excel</strong>.</li>
+          <li>El sistema te muestra, antes de guardar nada, cuáles filas están completas y cuáles tienen algún dato faltante.</li>
+          <li>Confirma, y todos los clientes válidos quedan dados de alta de un solo golpe.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Si algún día hay que cargar una cartera de clientes completa, no hay
+          que capturarlos uno por uno.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">4</span>
+      <div>
+        <h3>Las tarjetas donde caen los pagos por transferencia</h3>
+        <ol class="pasos">
+          <li>Entra a <strong>Tarjetas</strong> — ya verás una registrada: BBVA Salvador, terminación 1234.</li>
+          <li>Da de alta una segunda tarjeta para ver cómo se agrega una nueva.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Cuando un cliente paga por transferencia, queda registrado a qué
+          cuenta llegó el dinero — no solo que "se transfirió".
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">5</span>
+      <div>
+        <h3>La caja del día, para préstamos que salen fuera de lo normal</h3>
+        <ol class="pasos">
+          <li>Entra a <strong>Caja</strong> — el fondo de hoy es de <span class="num-col">$10,000</span>, con <span class="num-col">$7,000</span> aún disponibles.</li>
+          <li>Debajo, en el historial, verás dos solicitudes ya resueltas: una autorizada y una rechazada, con el motivo del rechazo escrito.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Cuando un cobrador necesita dinero extra en la calle para un cliente
+          especial, la decisión y el motivo quedan por escrito — no solo en
+          una llamada telefónica.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">6</span>
+      <div>
+        <h3>Acuerdos especiales para clientes con deuda atrasada</h3>
+        <ol class="pasos">
+          <li>Entra a <strong>Acuerdos</strong> → <strong>Nuevo acuerdo</strong>.</li>
+          <li>Busca a <strong>Patricia Flores Sánchez</strong> y selecciona su préstamo vencido.</li>
+          <li>El sistema muestra lo que debe hoy: <span class="num-col">$4,800</span> de capital e interés, más <span class="num-col">$400</span> de recargo por el atraso.</li>
+          <li>Puedes bajar el interés y el recargo que se le va a cobrar (nunca subirlos) y fijar cómo y cuándo va a pagar.</li>
+          <li>Guarda el acuerdo — aparece en la lista con su nuevo total. Si lo cancelas, la deuda regresa a sus condiciones originales y el acuerdo se marca como cancelado, pero nunca desaparece del historial.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Cuando conviene negociar con un cliente atrasado en vez de perderlo
+          por completo, el acuerdo queda documentado — con el antes y el
+          después.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">7</span>
+      <div>
+        <h3>El recargo que se acumula solo cuando alguien no paga a tiempo</h3>
+        <ol class="pasos">
+          <li>Entra a <strong>Préstamos</strong> y busca a <strong>Patricia Flores Sánchez</strong>.</li>
+          <li>En la columna de recargo verás <span class="num-col">$400.00</span>, separado del resto de la deuda.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          El recargo por atraso ya no se calcula a mano ni se le olvida a
+          nadie: el sistema lo va sumando solo, dos veces al día, mientras el
+          cliente siga sin pagar.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 2 ================= -->
+  <section class="parte" id="parte-2">
+    <div class="parte-head">
+      <h2>Parte 2 — Celular de un cobrador</h2>
+      <span class="donde">Cuenta: Carlos (equipo 20 días)</span>
+    </div>
+    <p class="parte-intro">
+      Cierra la sesión de la computadora (no hace falta) y en el celular entra
+      a la app con la cuenta de Carlos, uno de los cobradores.
+    </p>
+
+    <div class="parada">
+      <span class="badge">8</span>
+      <div>
+        <h3>La ficha completa del cliente, ahora en el celular</h3>
+        <ol class="pasos">
+          <li>En la pantalla principal debe aparecer un solo cliente pendiente hoy: <strong>Alejandro Morales Díaz</strong>, con <span class="num-col">$4,800</span> por cobrar.</li>
+          <li>Tócalo — se abre su ficha completa en pantalla llena: datos, domicilio con acceso directo a Maps, documentos y todos sus pagos anteriores.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">9</span>
+      <div>
+        <h3>Registrar un cobro y ver el saldo actualizarse al instante</h3>
+        <ol class="pasos">
+          <li>Desde la ficha de Alejandro, toca <strong>Registrar pago</strong>.</li>
+          <li>Elige <strong>Parcial</strong> y escribe, por ejemplo, <span class="num-col">$2,000</span>.</li>
+          <li>Elige <strong>Transferencia</strong> como forma de pago — aparece el mismo catálogo de tarjetas que viste en la computadora. Selecciónala.</li>
+          <li>Confirma: el saldo baja, la fecha para el siguiente pago se recorre, y Alejandro desaparece de la lista de hoy.</li>
+        </ol>
+        <div class="notif">📱 En el celular del dueño llegará: <span class="cuerpo">"Pago recibido ✅ — Alejandro pagó $2,000 (Parcial)"</span></div>
+        <div class="tip">
+          <span class="eyebrow">Tip</span><br>
+          Si tienes un segundo celular con la cuenta del dueño abierta, este es
+          el mejor momento para mostrar que el aviso llega solo, sin que nadie
+          toque nada en ese segundo teléfono. Ver la sección de avisos, al
+          final de esta guía.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">10</span>
+      <div>
+        <h3>Un cliente que no pudo pagar no se pierde de vista</h3>
+        <ol class="pasos">
+          <li>Busca a <strong>José Martínez Ruiz</strong> en Clientes y abre su ficha completa.</li>
+          <li>En <strong>Visitas registradas</strong> verás la nota "No estaba en casa" de un intento anterior.</li>
+          <li>Justo debajo, en su historial, se ve que después sí se logró cobrar el interés.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Cuando un cliente vencido no puede pagar un día, no hay que
+          acordarse de buscarlo — reaparece solo al día siguiente en la lista
+          del cobrador hasta que se resuelve.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">11</span>
+      <div>
+        <h3>El calendario de próximos cobros</h3>
+        <ol class="pasos">
+          <li>Ve a la pestaña <strong>Calendario</strong>.</li>
+          <li>Verás marcados los días en los que vencen José, Rosa y Fernando.</li>
+          <li>Toca cualquier día marcado — se abre la lista de quién toca cobrar ese día.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          El cobrador ya no solo ve "quién paga hoy" — puede planear su semana
+          completa de una sola mirada.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">12</span>
+      <div>
+        <h3>Pedir dinero para un préstamo especial, desde el celular</h3>
+        <ol class="pasos">
+          <li>Ve a la pestaña <strong>Caja</strong>.</li>
+          <li>Toca <strong>Nueva solicitud</strong> y escribe el nombre del cliente, el monto, y si es cliente nuevo o ya conocido.</li>
+          <li>Envía la solicitud — queda marcada como <strong>Pendiente</strong>. El cobrador nunca ve cuánto dinero hay disponible, solo pide y espera respuesta.</li>
+        </ol>
+        <div class="notif">🖥 En la computadora (Administración general) llegará: <span class="cuerpo">"Solicitud caja 📥 — Carlos solicita $X para [cliente]"</span></div>
+        <div class="notif">📱 Y de regreso en este celular: <span class="cuerpo">"Solicitud autorizada ✅" o "Solicitud rechazada ❌"</span></div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">13</span>
+      <div>
+        <h3>Cerrar el día de trabajo</h3>
+        <ol class="pasos">
+          <li>Ve a la pestaña <strong>Jornada</strong> y toca <strong>Cerrar jornada</strong>.</li>
+          <li>Verás el resumen del día: cuánto se cobró y en cuántas visitas.</li>
+        </ol>
+        <div class="notif">📱 En el celular del dueño llegará: <span class="cuerpo">"Cierre de jornada 🔒 — Carlos cerró. Recaudó $X en Y cobros"</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 3 ================= -->
+  <section class="parte" id="parte-3">
+    <div class="parte-head">
+      <h2>Parte 3 — Celular del dueño</h2>
+      <span class="donde">Cuenta: Dueño del negocio</span>
+    </div>
+    <p class="parte-intro">
+      Cierra sesión y entra en el celular con la cuenta del dueño del negocio.
+      Esta cuenta ve todo, pero no puede editar nada — es solo para tener el
+      panorama completo.
+    </p>
+
+    <div class="parada">
+      <span class="badge">14</span>
+      <div>
+        <h3>El resumen del día, con todo desglosado</h3>
+        <ol class="pasos">
+          <li>En el <strong>Dashboard</strong>, el resumen de hoy ahora separa efectivo de transferencia (y de qué cuenta), intereses de recargos por atraso, y quién liquidó su préstamo contra quién solo pagó el interés.</li>
+          <li>Debajo aparece cuántas solicitudes de caja hubo hoy, agrupadas por cobrador.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Ya no hace falta sumar a mano lo que entregó cada equipo — el
+          desglose completo del día está listo apenas cierra el último
+          cobrador.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">15</span>
+      <div>
+        <h3>Revisar cualquier cliente, sin importar el equipo</h3>
+        <ol class="pasos">
+          <li>Entra a <strong>Clientes</strong> y abre a cualquiera — por ejemplo, Patricia (equipo 30 días) o José (equipo 20 días).</li>
+          <li>A diferencia de un cobrador, esta cuenta puede abrir la ficha de cualquier cliente de cualquier equipo.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">16</span>
+      <div>
+        <h3>El historial completo de pagos, y los cobros que vienen</h3>
+        <ol class="pasos">
+          <li>Ve a <strong>Historial</strong> y filtra por fecha o por cobrador — por ejemplo, Fernando, cobrado por Miguel.</li>
+          <li>Cambia a la pestaña <strong>Próximos cobros</strong> — aquí se agrupa por el cobrador específico de cada préstamo, no por equipo completo.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 4 ================= -->
+  <section class="parte" id="parte-4">
+    <div class="parte-head">
+      <h2>Parte 4 — Los avisos automáticos</h2>
+      <span class="donde">Recomendado: 2 celulares</span>
+    </div>
+    <p class="parte-intro">
+      Ya viste algunos avisos aparecer durante el recorrido. Esta parte es
+      opcional, pero es la más convincente si la puedes armar: ver el aviso
+      llegar solo, en tiempo real, sin que nadie toque nada en el teléfono que
+      lo recibe.
+    </p>
+
+    <div class="parada">
+      <span class="badge">✓</span>
+      <div>
+        <h3>Cómo armarlo con lo que tengas a la mano</h3>
+        <ol class="pasos">
+          <li><strong>Celular 1:</strong> sesión abierta con la cuenta de un cobrador (Carlos). Es quien va a hacer las acciones.</li>
+          <li><strong>Celular 2</strong> (idealmente otro teléfono): sesión abierta con la cuenta del dueño. Debe quedarse con la app abierta, esperando.</li>
+          <li><strong>Computadora:</strong> sesión abierta con Administración general, para el aviso de solicitudes de caja.</li>
+        </ol>
+        <div class="atencion">
+          <strong>Antes de empezar:</strong> confirma que ambos celulares dieron
+          los permisos de notificación y que cada cuenta inició sesión al
+          menos una vez en este intento. Si un aviso no llega, ciérrala y
+          vuelve a entrar antes de pensar que algo falló.
+        </div>
+      </div>
+    </div>
+
+    <div class="parada">
+      <span class="badge">✓</span>
+      <div>
+        <h3>Qué aviso esperar, y en qué momento</h3>
+        <div class="tabla-wrap">
+          <table>
+            <thead><tr><th>Quién actúa</th><th>Aviso que llega</th><th>A quién</th></tr></thead>
+            <tbody>
+              <tr><td>Administración confirma clientes importados</td><td class="cred">"Nuevo cliente registrado 👤"</td><td>Dueño</td></tr>
+              <tr><td>Cobrador registra un pago</td><td class="cred">"Pago recibido ✅"</td><td>Dueño</td></tr>
+              <tr><td>Cobrador pide dinero de caja</td><td class="cred">"Solicitud caja 📥"</td><td>Administración</td></tr>
+              <tr><td>Administración responde la solicitud</td><td class="cred">"Solicitud autorizada ✅" / "Solicitud rechazada ❌"</td><td>Cobrador</td></tr>
+              <tr><td>Cobrador cierra su jornada</td><td class="cred">"Cierre de jornada 🔒"</td><td>Dueño</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cierre">
+    <h2>¿Y ahora qué?</h2>
+    <p>
+      Con esto ya viste las 13 funciones nuevas del sistema, tanto en la
+      computadora como en los celulares. Si algo no se comportó como aquí se
+      describe, o algo no quedó claro, anótalo — es justo lo que necesitamos
+      saber antes de dejar el sistema listo para trabajar con clientes reales.
+    </p>
+    <p class="firma">Guía de demostración · Fase 2 · Datos de prueba, no reales</p>
+  </div>
+
+</div>
+
+</body>
+</html>
