@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Cuatro novedades que agregamos despues de tu ultima revision: autorizar solicitudes de caja desde el celular, clientes organizados por equipo, foto obligatoria en pagos por transferencia y una plantilla de importacion mas completa.">
+<title>Ruta de Cobranza — Lo que Agregamos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Serif+4:ital,wght@1,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #20302A;
+    --muted: #5B6A5F;
+    --paper: #EFE9D8;
+    --surface: #FAF7EC;
+    --surface-2: #E7E0CB;
+    --line: rgba(32,48,42,0.18);
+    --accent: #A9762F;
+    --accent-ink: #FFFFFF;
+    --stamp-red: #9C4A32;
+    --stamp-red-ink: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ECE6D4;
+      --muted: #A9B3A6;
+      --paper: #16241E;
+      --surface: #1C2C25;
+      --surface-2: #24362D;
+      --line: rgba(236,230,212,0.16);
+      --accent: #D6A44F;
+      --accent-ink: #1B1408;
+      --stamp-red: #E09A80;
+      --stamp-red-ink: #33130A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ECE6D4;
+    --muted: #A9B3A6;
+    --paper: #16241E;
+    --surface: #1C2C25;
+    --surface-2: #24362D;
+    --line: rgba(236,230,212,0.16);
+    --accent: #D6A44F;
+    --accent-ink: #1B1408;
+    --stamp-red: #E09A80;
+    --stamp-red-ink: #33130A;
+  }
+
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    line-height: 1.68;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  a { color: inherit; text-decoration-color: var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+  h1, h2, h3, .eyebrow, .mono {
+    font-family: 'Archivo', 'Arial Narrow', sans-serif;
+  }
+  h1 { text-wrap: balance; }
+  h2 { text-wrap: balance; }
+
+  /* ---------- Portada ---------- */
+  .portada {
+    padding: 3.2rem 0 2.4rem;
+    border-bottom: 3px solid var(--ink);
+  }
+  .portada .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .74rem;
+    font-weight: 600;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 .9rem;
+  }
+  .portada h1 {
+    font-weight: 900;
+    font-size: clamp(2.1rem, 6vw, 3.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin: 0 0 1rem;
+  }
+  .portada .lede {
+    max-width: 62ch;
+    color: var(--ink);
+    font-size: 1.12rem;
+    margin: 0 0 1.6rem;
+  }
+  .portada .lede em { font-style: italic; color: var(--muted); }
+
+  .stamp-note {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1.5px dashed var(--ink);
+    border-radius: 3px;
+    padding: .5rem .8rem;
+  }
+
+  /* ---------- Índice ---------- */
+  .indice {
+    margin: 2.2rem 0;
+    padding: 1.3rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .indice .eyebrow { margin: 0 0 .8rem; }
+  .indice ol { margin: 0; padding: 0 0 0 0; list-style: none; display: grid; gap: .5rem; }
+  .indice li { display: flex; gap: .7rem; align-items: baseline; font-size: .96rem; }
+  .indice .num { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-weight: 600; min-width: 1.6em; }
+  .indice a { text-decoration: none; }
+  .indice a:hover { text-decoration: underline; }
+
+  .eyebrow {
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ---------- Secciones "Parte" ---------- */
+  .parte { margin-top: 4rem; scroll-margin-top: 1.5rem; }
+  .parte-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: .7rem;
+    margin-bottom: .3rem;
+  }
+  .parte-head h2 {
+    font-weight: 800;
+    font-size: clamp(1.4rem, 3.4vw, 1.85rem);
+    margin: .15rem 0 0;
+  }
+  .parte-head .donde {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .78rem;
+    color: var(--muted);
+    white-space: nowrap;
+    padding-bottom: .3rem;
+  }
+  .parte-intro { color: var(--muted); font-size: .98rem; margin: 1rem 0 0; max-width: 62ch; }
+
+  /* ---------- Paradas ---------- */
+  .parada {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 1.1rem;
+    margin-top: 2.4rem;
+    scroll-margin-top: 1.5rem;
+  }
+  .parada .badge {
+    width: 3rem; height: 3rem;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 1.15rem;
+    color: var(--ink);
+    transform: rotate(-4deg);
+  }
+  .parada h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: .3rem 0 .6rem;
+  }
+  .parada .pasos { margin: 0 0 1rem; padding-left: 1.2rem; }
+  .parada .pasos li { margin-bottom: .4rem; }
+  .parada .pasos li::marker { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-weight: 600; }
+
+  .porque {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: .85rem 1rem;
+    font-size: .94rem;
+    color: var(--ink);
+  }
+  .porque .eyebrow { display: block; margin-bottom: .3rem; }
+
+  .notif {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82rem;
+    font-weight: 600;
+    padding: .5rem .85rem;
+    border-radius: 20px;
+    margin: .5rem 0;
+  }
+  .notif .cuerpo { font-weight: 500; opacity: .82; }
+
+  .tip {
+    margin-top: .8rem;
+    background: transparent;
+    border: 1.5px dashed var(--accent);
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    font-size: .92rem;
+    color: var(--ink);
+  }
+  .tip .eyebrow { color: var(--accent); }
+
+  .atencion {
+    background: var(--stamp-red);
+    color: var(--stamp-red-ink);
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    font-size: .92rem;
+    margin-top: .8rem;
+  }
+  .atencion strong { font-family: 'Archivo', sans-serif; }
+
+  /* ---------- Tablas ---------- */
+  .tabla-wrap { overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--line); border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+  thead th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: .65rem .8rem;
+    border-bottom: 1.5px solid var(--ink);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: .65rem .8rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .num-col { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cred { font-family: 'IBM Plex Mono', monospace; font-size: .85rem; white-space: nowrap; }
+
+  /* ---------- Checklist ---------- */
+  .checklist { margin: 1.2rem 0; padding: 0; list-style: none; display: grid; gap: .5rem; }
+  .checklist li {
+    display: flex; gap: .7rem; align-items: baseline;
+    font-size: .94rem; color: var(--ink);
+  }
+  .checklist li::before {
+    content: '☐';
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ---------- Cierre ---------- */
+  .cierre {
+    margin-top: 4.5rem;
+    padding-top: 2rem;
+    border-top: 3px solid var(--ink);
+  }
+  .cierre h2 { font-weight: 800; font-size: 1.5rem; margin: 0 0 .8rem; }
+  .cierre p { max-width: 62ch; }
+  .firma {
+    margin-top: 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 560px) {
+    .parada { grid-template-columns: 2.4rem 1fr; gap: .8rem; }
+    .parada .badge { width: 2.4rem; height: 2.4rem; font-size: .95rem; }
+  }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+  <header class="portada">
+    <p class="kicker">Actualización — Ruta de Cobranza</p>
+    <h1>Lo que Agregamos</h1>
+    <p class="lede">
+      Después de tu última revisión agregamos 4 mejoras puntuales al sistema.
+      Esta guía es corta — solo esas 4 cosas — y te lleva paso a paso para
+      que las pruebes tú mismo, usando las mismas cuentas de la vez anterior.
+      <br><br>
+      <em>Sigue siendo una versión de prueba: lo que ves aquí (clientes,
+      préstamos, pagos) es información ficticia, pensada solo para que
+      puedas probar sin ningún riesgo.</em>
+    </p>
+    <span class="stamp-note">⏱ Tiempo estimado: 10–15 minutos</span>
+  </header>
+
+  <nav class="indice">
+    <p class="eyebrow">En esta guía</p>
+    <ol>
+      <li><span class="num">01</span><a href="#accesos">Cuentas que vas a usar</a></li>
+      <li><span class="num">02</span><a href="#parte-1">Parte 1 — Desde la computadora</a></li>
+      <li><span class="num">03</span><a href="#parte-2">Parte 2 — Celular del dueño</a></li>
+      <li><span class="num">04</span><a href="#parte-3">Parte 3 — Autorizar desde el celular</a></li>
+      <li><span class="num">05</span><a href="#parte-4">Parte 4 — Celular de un cobrador</a></li>
+    </ol>
+  </nav>
+
+  <section id="accesos">
+    <p class="eyebrow">Antes de empezar</p>
+    <h2 style="font-weight:800; font-size:1.4rem; margin:.4rem 0 .8rem;">Las mismas cuentas de la vez anterior</h2>
+    <p style="color:var(--muted); max-width:62ch;">
+      No cambió nada en los accesos — usa las mismas cuentas que ya conoces.
+    </p>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr><th>Cuenta</th><th>Para qué sirve</th><th>Usuario</th><th>Contraseña</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Administración general<br><span style="color:var(--muted); font-size:.85rem;">(computadora y, en esta guía, también celular)</span></td><td>Da de alta clientes y ahora también resuelve solicitudes de caja desde el celular</td><td class="cred">salvador@prestamos.com</td><td class="cred">password123</td></tr>
+          <tr><td>Dueño del negocio<br><span style="color:var(--muted); font-size:.85rem;">(celular)</span></td><td>Ve el resumen de todo, sin poder editar nada</td><td class="cred">admin@prestamos.com</td><td class="cred">password123</td></tr>
+          <tr><td>Cobrador — Carlos<br><span style="color:var(--muted); font-size:.85rem;">(celular, equipo 20 días)</span></td><td>Cobra y registra pagos de su equipo</td><td class="cred">carlos@prestamos.com</td><td class="cred">password123</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted); font-size:.9rem;">
+      Panel de computadora: <a href="https://prestamos-app-495705.web.app">prestamos-app-495705.web.app</a>
+    </p>
+  </section>
+
+  <!-- ================= PARTE 1 ================= -->
+  <section class="parte" id="parte-1">
+    <div class="parte-head">
+      <h2>Parte 1 — Desde la computadora</h2>
+      <span class="donde">Cuenta: Administración general</span>
+    </div>
+    <p class="parte-intro">
+      Entra a <strong>prestamos-app-495705.web.app</strong> con la cuenta de
+      administración general.
+    </p>
+
+    <div class="parada">
+      <span class="badge">1</span>
+      <div>
+        <h3>Una plantilla de Excel más completa para dar de alta clientes</h3>
+        <ol class="pasos">
+          <li>En <strong>Clientes</strong>, descarga de nuevo la plantilla de Excel.</li>
+          <li>Ahora trae más columnas que antes: el tipo de domicilio, la descripción de la fachada, y sobre todo <strong>la ubicación exacta</strong> (coordenadas) tanto de la casa como del trabajo del cliente.</li>
+          <li>Llena 1-2 filas de prueba usando la fila de ejemplo como guía y sube el archivo igual que antes.</li>
+          <li>Abre el cliente que acabas de importar — ya debe aparecer ubicado en el mapa, sin que tengas que editarlo a mano después.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Antes, al importar varios clientes de una vez, había que entrar a
+          cada uno después para ubicarlo en el mapa a mano. Ahora la
+          ubicación entra junto con todo lo demás, de un solo golpe.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 2 ================= -->
+  <section class="parte" id="parte-2">
+    <div class="parte-head">
+      <h2>Parte 2 — Celular del dueño</h2>
+      <span class="donde">Cuenta: Dueño del negocio</span>
+    </div>
+    <p class="parte-intro">
+      Entra en el celular con la cuenta del dueño del negocio.
+    </p>
+
+    <div class="parada">
+      <span class="badge">2</span>
+      <div>
+        <h3>Los clientes, organizados por equipo, sin tener que buscar</h3>
+        <ol class="pasos">
+          <li>Ve a la pantalla de <strong>Clientes</strong>.</li>
+          <li>Arriba del buscador ahora hay dos pestañas: <strong>Equipo 20 días</strong> y <strong>Equipo 30 días</strong>, cada una con su contador.</li>
+          <li>Toca una y otra — el cambio es inmediato, sin tener que desplazarte por una lista larga para encontrar al equipo que buscas.</li>
+          <li>El buscador sigue funcionando normal, dentro de la pestaña que tengas abierta.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Antes había que deslizar toda la lista para separar mentalmente
+          quién es de qué equipo. Ahora es un toque, y ya.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 3 ================= -->
+  <section class="parte" id="parte-3">
+    <div class="parte-head">
+      <h2>Parte 3 — Autorizar caja desde el celular</h2>
+      <span class="donde">Cuentas: Cobrador y Administración general</span>
+    </div>
+    <p class="parte-intro">
+      Esta es la mejora más grande de las 4: antes, autorizar o rechazar una
+      solicitud de caja solo se podía hacer desde la computadora. Ahora
+      también se puede desde el celular, sin perder el control de quién
+      puede hacerlo.
+    </p>
+
+    <div class="parada">
+      <span class="badge">3</span>
+      <div>
+        <h3>Pedir y resolver una solicitud, sin tocar una computadora</h3>
+        <ol class="pasos">
+          <li>En el celular, entra con la cuenta del cobrador Carlos. Ve a <strong>Caja</strong> → <strong>Nueva solicitud</strong> y registra una de prueba (nombre de cliente y monto cualquiera).</li>
+          <li>Cierra esa sesión y entra, en el mismo celular, con la cuenta de Administración general.</li>
+          <li>En el <strong>Dashboard</strong> aparece una sección nueva: <strong>"Pendientes por autorizar"</strong>, con la solicitud que acabas de crear.</li>
+          <li>Toca <strong>Autorizar</strong>, elige de qué fondo sale el dinero, y confirma — o toca <strong>Rechazar</strong> y escribe el motivo.</li>
+          <li>Para confirmar que el control de permisos sigue intacto: entra de nuevo con la cuenta del dueño del negocio — esa sección <strong>no debe aparecer</strong> ahí.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Ya no hace falta estar frente a una computadora para resolver una
+          solicitud urgente — se puede hacer desde donde sea, sin abrirle la
+          puerta a nadie más: sigue siendo exclusivo de la misma cuenta que
+          ya lo hacía antes desde la computadora.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTE 4 ================= -->
+  <section class="parte" id="parte-4">
+    <div class="parte-head">
+      <h2>Parte 4 — Celular de un cobrador</h2>
+      <span class="donde">Cuenta: Carlos (equipo 20 días)</span>
+    </div>
+    <p class="parte-intro">
+      Entra de nuevo con la cuenta de Carlos para la última prueba.
+    </p>
+
+    <div class="parada">
+      <span class="badge">4</span>
+      <div>
+        <h3>Ya no se puede registrar una transferencia sin foto del comprobante</h3>
+        <ol class="pasos">
+          <li>En el <strong>Dashboard</strong> debe aparecer <strong>Alejandro Morales Díaz</strong>, con $4,800 pendientes. Toca su tarjeta → <strong>Registrar pago</strong>.</li>
+          <li>Elige <strong>Parcial</strong>, escribe un monto cualquiera, y elige <strong>Transferencia</strong> como forma de pago.</li>
+          <li>Sin adjuntar ninguna foto, intenta enviar el pago — debe aparecer un aviso pidiendo al menos una foto del comprobante, y el pago no se registra todavía.</li>
+          <li>Toca <strong>Tomar foto</strong> o <strong>Galería</strong> para adjuntar una imagen (puedes quitarla con la "×" si te equivocas). Envía el pago — ahora sí se registra.</li>
+          <li>Abre de nuevo la ficha de Alejandro y revisa su historial de pagos — la foto que adjuntaste debe seguir ahí, disponible para verla cuando se necesite.</li>
+          <li>Como comparación, registra un pago en <strong>efectivo</strong> sobre cualquier otro cliente — ese sí se guarda sin pedir ninguna foto, igual que siempre.</li>
+        </ol>
+        <div class="porque">
+          <span class="eyebrow">Por qué importa</span>
+          Cuando un pago llega por transferencia, ahora queda la foto del
+          comprobante guardada junto con el pago — ya no depende de que
+          alguien la guarde aparte o se acuerde de dónde la dejó.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cierre">
+    <h2>¿Y ahora qué?</h2>
+    <p>
+      Con esto ya probaste las 4 novedades de esta ronda. Marca lo que
+      quieras en la lista de abajo mientras pruebas, y cualquier comentario,
+      duda o ajuste que te surja, compártelo con nosotros directamente —
+      para eso es esta guía.
+    </p>
+    <ul class="checklist">
+      <li>La plantilla de Excel trae la ubicación y se refleja en el mapa al importar</li>
+      <li>Las pestañas de equipo cambian al toque, sin necesidad de scroll</li>
+      <li>Administración general puede autorizar/rechazar desde el celular</li>
+      <li>El dueño del negocio no ve esa misma sección (el permiso no cambió)</li>
+      <li>Una transferencia sin foto queda bloqueada</li>
+      <li>La foto del comprobante se puede volver a ver después en el historial</li>
+      <li>Un pago en efectivo sigue sin pedir ninguna foto</li>
+    </ul>
+    <p class="firma">Actualización · Ruta de Cobranza · Datos de prueba, no reales</p>
+  </div>
+
+</div>
+
+</body>
+</html>
